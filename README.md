@@ -27,3 +27,11 @@ docker exec -it openpoiservice_gunicorn_flask_1 /ops_venv/bin/python manage.py i
 cd openrouteservice/docker
 docker-compose up -d
 ```
+
+## After
+
+ Now you are ready to use both api  
+ open route service will serve its API to http://localhost:9090/ors  
+ open POI service will serve its API to http://localhost:5000  
+
+ We used [openrouteservice-py](https://github.com/GIScience/openrouteservice-py). It allowed us to enhance our dataset with points of interest around houses.
