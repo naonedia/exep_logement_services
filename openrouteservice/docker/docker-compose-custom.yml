@@ -1,0 +1,22 @@
+version: '3'
+services:
+    ors-custom-pays-loire:
+        container_name: ors-custom-pays-loire
+        ports:
+        - 9090:8080
+        build:
+            context: ../
+            dockerfile: Dockerfile
+            args:
+                APP_CONFIG: ./docker/conf/app.config.sample
+                #OSM_FILE: ./docker/data/map.osm
+                OSM_FILE: ./docker/data/pays-de-la-loire-latest.osm.pbf
+        volumes:
+            - ./graphs:/ors-core/data/graphs
+            - ./elevation_cache:/ors-core/data/elevation_cache
+            - ./logs/ors/:/var/log/ors/
+            - ./logs/tomcat/:/usr/local/tomcat/logs
+        environment:
+            - JAVA_OPTS=-Djava.awt.headless=true -server -XX:TargetSurvivorRatio=75 -XX:SurvivorRatio=64 -XX:MaxTenuringThreshold=3 -XX:+UseConcMarkSweepGC -XX:+UseParNewGC -XX:ParallelGCThreads=4 -Xms1g -Xmx8g
+            - CATALINA_OPTS= -Dcom.sun.management.jmxremote -Dcom.sun.management.jmxremote.port=9001 -Dcom.sun.management.jmxremote.rmi.port=9001 -Dcom.sun.management.jmxremote.authenticate=false -Dcom.sun.management.jmxremote.ssl=false -Djava.rmi.server.hostname=localhost
+
