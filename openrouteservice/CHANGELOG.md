@@ -6,13 +6,32 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [Unreleased]
 ### Added
--
 ### Fixed
--
 ### Changed
--
 ### Deprecated
--
+
+## [5.0.1] - 2019-04-08
+### Added
+- CALT routing algorithm - Not for production (Issue #433)
+- Makes docker and docker-compose deployment of openrouteservice more customizable (Issue #434)
+- Add the possibility to predefine standard maximum search radii in general and for each used profile in the config file (Issue #418)
+### Fixed
+- fix the GPX output of the APIv2. It was broken since release of api v2. (Issue #533)
+- fix SRTM URL in GH fork (#394)
+- fix classpath issues for resources, Windows builds now (#489)
+- isochrone geojson bbox now format compliant (#493)
+- v2 isochrones now respects max_locations in app.config (#482)
+- Updated documentation to reflect correct isochrone smoothing algorithm (Issue #471)
+- Enable > 2 waypoints when geometry_simplify=true (#457)
+- Made it so that the wheelchair profile only goes over bridleways if they are set to be foot or wheelchair accessible (#415)
+- Fixed the build fail bug when `routing_name` was set in the config file (#424)
+- Fixed problem with border crossings where the way crosses three polygons (#491)
+### Changed
+- Updated pom to always build ors.war (Issue #432)
+- Replace usage of packages incompatible with Java >8 (#474)
+- Updated Matrix to have a maximum number of routes to calculate rather than locations (#518)
+### Deprecated
+
 
 ## [5.0] - 2019-02-25
 ### Added
@@ -29,6 +48,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - Updated pom to use correct opengeo repo and reordered so this is the last in the list, and use latest ORS-Graphhopper library (Issue #398)
 - Added /directions as an endpoint for routing (Issue #384)
 - Removed the following avoid features: pavedroads, unpavedroads, tunnels, tracks and hills, as well as the option to set maximum speed; for cycling and walking profiles the option to specify difficulty settings such as fitness level and maximum steepness (issue #396)
+- Updated pom to always build ors.war (Issue #432)
 ### Deprecated
 
 ## [4.7.2] - 2018-12-10

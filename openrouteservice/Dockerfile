@@ -4,11 +4,7 @@ ENV MAVEN_OPTS="-Dmaven.repo.local=.m2/repository -Dorg.slf4j.simpleLogger.log.o
 ENV MAVEN_CLI_OPTS="--batch-mode --errors --fail-at-end --show-version -DinstallAtEnd=true -DdeployAtEnd=true"
 
 ARG APP_CONFIG=docker/conf/app.config.sample
-
-#ARG OSM_FILE=docker/data/heidelberg.osm.gz
 ARG OSM_FILE=docker/data/pays-de-la-loire-latest.osm.pbf
-#ARG OSM_FILE=docker/data/map.osm
-
 ARG JAVA_OPTS
 ARG CATALINA_OPTS
 
@@ -28,7 +24,6 @@ COPY openrouteservice /ors-core/openrouteservice
 
 # Copy osm data file, config and cache if provided (ors will download otherwise)
 COPY $OSM_FILE /ors-core/data/osm_file.pbf
-
 COPY $APP_CONFIG /ors-core/openrouteservice/src/main/resources/app.config
 
 WORKDIR /ors-core
@@ -45,7 +40,6 @@ RUN cp -R /tmp/apache-tomcat-8.0.32/* /usr/local/tomcat/
 
 # Add tomcat custom settings if provided
 RUN touch /usr/local/tomcat/bin/setenv.sh
-RUN echo "OSM_FILE=\"$OSM_FILE\""
 RUN echo "CATALINA_OPTS=\"$CATALINA_OPTS\"" >> /usr/local/tomcat/bin/setenv.sh
 RUN echo "JAVA_OPTS=\"$JAVA_OPTS\"" >> /usr/local/tomcat/bin/setenv.sh
 

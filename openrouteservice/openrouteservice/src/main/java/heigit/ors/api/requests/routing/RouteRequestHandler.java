@@ -97,9 +97,6 @@ public class RouteRequestHandler extends GenericHandler {
             if (request.hasExtraInfo() && request.getSimplifyGeometry()) {
                 throw new IncompatibleParameterException(RoutingErrorCodes.INCOMPATIBLE_PARAMETERS, RouteRequest.PARAM_SIMPLIFY_GEOMETRY, "true", RouteRequest.PARAM_EXTRA_INFO, "*");
             }
-            if (request.getCoordinates().size() > 2 && request.getSimplifyGeometry()) {
-                throw new IncompatibleParameterException(RoutingErrorCodes.INCOMPATIBLE_PARAMETERS, RouteRequest.PARAM_SIMPLIFY_GEOMETRY, "true", RouteRequest.PARAM_COORDINATES, "count > 2");
-            }
         }
 
         if (request.hasSkipSegments()) {
@@ -134,8 +131,10 @@ public class RouteRequestHandler extends GenericHandler {
         if(request.hasMaximumSearchRadii())
             params.setMaximumRadiuses(convertMaxRadii(request.getMaximumSearchRadii(), coordinatesLength, profileType));
 
-        if(request.hasUseContractionHierarchies())
+        if(request.hasUseContractionHierarchies()) {
             params.setFlexibleMode(convertSetFlexibleMode(request.getUseContractionHierarchies()));
+            params.setOptimized(request.getUseContractionHierarchies());
+        }
 
         if(request.hasRouteOptions()) {
             params = processRouteRequestOptions(request, params);
