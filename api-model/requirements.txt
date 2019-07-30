@@ -1,0 +1,6 @@
+flask
+flask_restful
+openrouteservice
+pandas
+shapely
+sklearn
