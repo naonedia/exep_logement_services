@@ -1,6 +1,7 @@
 from flask import Flask, request
 from flask_restful import Resource, Api, reqparse
-
+from flask_limiter import Limiter
+from flask_limiter.util import get_remote_address
 
 from geojson_utils import retrieveNameAndPostalCode
 from embed_data import embedData
@@ -101,5 +102,11 @@ def create_app():
 if __name__ == '__main__':
 
     app = create_app()
+
+    limiter = Limiter(
+        app,
+        key_func=get_remote_address,
+        default_limits=["200 per day", "50 per hour"]
+    )
 
     app.run(debug=True,use_reloader=False,host='0.0.0.0',port=6000)
