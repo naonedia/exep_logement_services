@@ -1,3 +1,5 @@
+docker/data/*.osm.pbf
+
 .metadata/
 
 .recommenders/

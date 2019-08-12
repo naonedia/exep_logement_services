@@ -3,7 +3,7 @@ services:
     ors-app:
         container_name: ors-app
         ports:
-        - 9090:8080
+        - 9999:8080
         build:
             context: ../
             args:
