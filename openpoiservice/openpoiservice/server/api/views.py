@@ -119,11 +119,22 @@ def places():
             # check restrictions and parse geometry
             all_args['geometry'] = parse_geometries(all_args['geometry'])
 
-            features = request_pois(all_args)
+            features = []
+            if all_args['geometry']['geojson']['type'] == 'MultiPolygon':
+                polygons = list(all_args['geometry']['geom'])
 
-            query_info = QueryInfo(raw_request).__dict__
+                for polygon in polygons:
+                    all_args['geometry']['geom'] = polygon
+                    tmp = request_pois(all_args)
+                    query_info = QueryInfo(raw_request).__dict__
+                    tmp["information"] = query_info
+                    features.append(tmp)
 
-            features["information"] = query_info
+            else:
+                tmp = request_pois(all_args)
+                query_info = QueryInfo(raw_request).__dict__
+                tmp["information"] = query_info
+                features.append(tmp)
 
             # query pois
             r = Response(json.dumps(features), mimetype='application/json; charset=utf-8')
@@ -179,11 +190,11 @@ def check_validity(geojson):
     :param geojson: geojson object
     :return: will return the geo
     """
-    if geojson.is_valid:
-        return geojson
-    else:
-        raise api_exceptions.InvalidUsage(status_code=500, error_code=4007, message='{} {}'.format(
-            "geojson", geojson.is_valid))
+    #if geojson.is_valid:
+    return geojson
+    #else:
+    #    raise api_exceptions.InvalidUsage(status_code=500, error_code=4007, message='{} {}'.format(
+    #        "geojson", geojson.is_valid))
 
 
 def parse_geometries(geometry):
@@ -230,7 +241,7 @@ def parse_geometries(geometry):
                     message='Your linestring geometry is too long ({} meters), check the server restrictions.'.format(
                         length))
 
-        elif geojson_obj.geom_type == 'Polygon':
+        elif geojson_obj.geom_type == 'Polygon' or geojson_obj.geom_type == 'MultiPolygon':
 
             check_for_buffer(geometry, ops_settings['maximum_search_radius_for_polygons'])
 

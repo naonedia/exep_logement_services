@@ -16,10 +16,6 @@ class CategoryTools(object):
         self.category_to_group_index = {}
         self.generate_category_indices()
 
-        print(self.category_group_ids)
-        print(self.category_ids)
-        print(self.group_index)
-
     def unify_categories(self, filters):
 
         category_ids_of_group = []
