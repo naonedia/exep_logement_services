@@ -1,7 +1,8 @@
 flask
 flask_limiter
 flask_restful
+flask_cors
 openrouteservice
-pandas
+pandas==0.25.0
 shapely
 sklearn

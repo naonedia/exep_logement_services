@@ -24,7 +24,7 @@ def getPOIGroupForHouse(longitude, latitude, poi_group_id, timeOrDistance=900, p
     poi = {}
     treatedLocations = []
 
-    poi = POI_CLIENT.places(**params_poi)['features']  # Actual POI request
+    poi = POI_CLIENT.places(**params_poi)[0]['features']  # Actual POI request
 
     treatedLocations = []
     res = []
@@ -38,24 +38,24 @@ def getPOIGroupForHouse(longitude, latitude, poi_group_id, timeOrDistance=900, p
 
 def embedData(data):
 
-    iso, foot_list_pois = getPOIGroupForHouse(data['longitude'], data['latitude'], [800, 810, 820, 830, 840], timeOrDistance=600, profile='foot-walking')  # 10 min by foot
-    iso, car_list_pois = getPOIGroupForHouse(data['longitude'], data['latitude'], [800, 810, 820, 830, 840], timeOrDistance=300, profile='driving-car')  # 5 min by car
+    iso, foot_list_pois = getPOIGroupForHouse(data.loc[0,'longitude'], data.loc[0,'latitude'], [800, 810, 820, 830, 840], timeOrDistance=600, profile='foot-walking')  # 10 min by foot
+    iso, car_list_pois = getPOIGroupForHouse(data.loc[0,'longitude'], data.loc[0,'latitude'], [800, 810, 820, 830, 840], timeOrDistance=300, profile='driving-car')  # 5 min by car
 
     for poi in foot_list_pois:
         for cat, info in poi['properties']['category_ids'].items():
             col_name = 'foot/' + info['category_group'] + '/' + info['category_name']
-            if col_name in data:
-                data[col_name] += 1
+            if col_name in data.iloc[0]:
+                data.loc[0,col_name] += 1
             else:
-                data[col_name] = 1
+                data.loc[0,col_name] = 1
 
     for poi in car_list_pois:
         for cat, info in poi['properties']['category_ids'].items():
             col_name = 'car/' + info['category_group'] + '/' + info['category_name']
-            if col_name in data:
-                data[col_name] += 1
+            if col_name in data.iloc[0]:
+                data.loc[0,col_name] += 1
             else:
-                data[col_name] = 1
+                data.loc[0,col_name] = 1
 
     filter_col = [col for col in data if col.startswith('car') or col.startswith('foot')]
     data[filter_col] = data[filter_col].fillna(value=0)

@@ -1,9 +1,11 @@
-version: '2.2'
+version: '3.2'
 
 services:
   api_model_flask:
     build: .
     ports:
-      - "9090:5000"
+      - "80:6000"
     restart: on-failure
-    volumes: /data/newdata.csv:/data/newdata.csv
+    volumes: 
+     - ./data/newdata.csv:/data/newdata.csv
+    

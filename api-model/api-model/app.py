@@ -2,23 +2,56 @@ from flask import Flask, request
 from flask_restful import Resource, Api, reqparse
 from flask_limiter import Limiter
 from flask_limiter.util import get_remote_address
+from flask_cors import CORS
 
-from geojson_utils import retrieveNameAndPostalCode
+import sys
+import logging
+import pandas as pd
+import numpy as np
+import keras
+import tensorflow as tf
+from keras.models import load_model
+
+
+from geojson_utils import retrieveNameAndPostalCode, encodeCommune, encodePostalCode, encodeType
 from embed_data import embedData
 from io_utils import appendNewData
+from economy_data import addEco
+from constants_var import COLUMNS_ORDER
+
+global KERAS_MODEL
+global graph
+
+def normalize(data):
+    mu = COLUMNS_ORDER.loc[0].to_numpy()
+    std = COLUMNS_ORDER.loc[1].to_numpy()
+    return (data - mu) / std
+
+
+def translate_features_name(data):
+    data['surface_reelle_bati'] = data['groundSurface']
+    data['surface_carrez'] = data['groundSurfaceCarrez']
+    data['nombre_pieces_principales'] = data['roomNumber']
+    data['surface_terrain'] = data['groundSurfaceTotal']
+    data.pop('groundSurface', None)
+    data.pop('groundSurfaceCarrez', None)
+    data.pop('roomNumber', None)
+    data.pop('groundSurfaceTotal', None)
+
+    return data
 
 
 def checkJSONEstimate(data):
-    if 'type_housing' not in data:
-        return False, "Missing type_housing in given data"
-    if 'ground_surface' not in data:
-        return False, "Missing ground_surface in given data"
-    if 'ground_surface_carrez' not in data:
-        return False, "Missing ground_surface_carrez in given data"
-    if 'ground_surface_total' not in data:
-        return False, "Missing ground_surface_total in given data"
-    if 'room_number' not in data:
-        return False, "Missing room_number in given data"
+    if 'type' not in data:
+        return False, "Missing type in given data"
+    if 'groundSurface' not in data:
+        return False, "Missing groundSurface in given data"
+    if 'groundSurfaceCarrez' not in data:
+        return False, "Missing groundSurfaceCarrez in given data"
+    if 'groundSurfaceTotal' not in data:
+        return False, "Missing groundSurfaceTotal in given data"
+    if 'roomNumber' not in data:
+        return False, "Missing roomNumber in given data"
     if 'longitude' not in data:
         return False, "No longitude in given data"
     if 'latitude' not in data:
@@ -46,39 +79,81 @@ def create_app():
     class Estimate(Resource):
         def post(self):
             json_data = request.get_json(force=True)
+            app.logger.info(json_data)
 
-            if checkJSONEstimate(json_data):
-                enriched_data = embedData(json_data)
-                town_name, postal_code = retrieveNameAndPostalCode
+            json_check, err = checkJSONEstimate(json_data)
+            if json_check:
+                data = translate_features_name(json_data)
+                data = pd.io.json.json_normalize(json_data)
+                data = embedData(data)
+                data = addEco(data)
+
+                town_name, postal_code = retrieveNameAndPostalCode(data.loc[0,'longitude'],data.loc[0,'latitude'])
                 if town_name and postal_code:
-                    enriched_data['nom_commune'] = town_name
-                    enriched_data['code_postal'] = postal_code
+                    data.loc[0,'nom_commune'] = town_name
+                    data.loc[0,'code_postal'] = postal_code
                     
-                    # Call Tensorflow serving
+                    encodeCommune(data)
+                    encodePostalCode(data)
+                    encodeType(data)
+
+
+                    missingColumns = set(COLUMNS_ORDER).difference(set(data))
+                    for val in missingColumns:
+                        data.loc[0,val] = 0
+
+                    # Re-ordering columns according to the trained model
+                    data = data[COLUMNS_ORDER.columns]
+
+                    
+                    # Normalize data 
+                    data = normalize(data.to_numpy())
                     
                     # Return estimation
-                    return enriched_data
+                    with graph.as_default():                  
+                        res = KERAS_MODEL.predict(np.array(data)[0:1])
+
+                    return {"price": str(res[0][0])}
                 else:
 
                     # Error whilst retrieving town name and postal code
                     return 'Internal Server Error', 500
             
             # Missing params in post request
-            return 'Unsupported Media Type', 415
+            return err, 415
 
     class Participate(Resource):
         def post(self):
             json_data = request.get_json(force=True)
+            app.logger.info(json_data)
             
-            if checkJSONParticipate(json_data):
-
-                enriched_data = embedData(json_data)
-                town_name, postal_code = retrieveNameAndPostalCode
+            json_check, err = checkJSONParticipate(json_data)
+            if json_check:
+                data = translate_features_name(json_data)
+                data = pd.io.json.json_normalize(json_data)
+                data = embedData(data)
+                data = addEco(data)
+                
+                town_name, postal_code = retrieveNameAndPostalCode(data['longitude'],data['latitude'])
                 if town_name and postal_code:
-                    enriched_data['nom_commune'] = town_name
-                    enriched_data['code_postal'] = postal_code
+                    data.loc[0,'nom_commune'] = town_name
+                    data.loc[0,'code_postal'] = postal_code
                     
-                    appendNewData(enriched_data)
+                    encodeCommune(data)
+                    encodePostalCode(data)
+                    encodeType(data)
+
+                    missingColumns = set(COLUMNS_ORDER).difference(set(data))
+                    for val in missingColumns:
+                        data.loc[0,val] = 0
+
+                    # Re-ordering columns according to the trained model
+                    data = data[COLUMNS_ORDER.columns]
+
+                    # Normalize data 
+                    data = normalize(data.to_numpy())
+                    
+                    appendNewData(data)
                     
                     # No return
                     return '', 200
@@ -88,7 +163,7 @@ def create_app():
                     return 'Internal Server Error', 500
             
             # Missing params in post request
-            return 'Unsupported Media Type', 415
+            return err, 415
 
 
 
@@ -103,10 +178,18 @@ if __name__ == '__main__':
 
     app = create_app()
 
+    KERAS_MODEL = load_model('data/models/modelv1.h5')
+    graph = tf.get_default_graph()
+
     limiter = Limiter(
         app,
         key_func=get_remote_address,
         default_limits=["200 per day", "50 per hour"]
     )
+
+    cors = CORS(app, resources={r"*": {"origins": "*"}})
+
+    handler = logging.StreamHandler(sys.stdout)
+    handler.setFormatter(logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s'))
 
     app.run(debug=True,use_reloader=False,host='0.0.0.0',port=6000)
