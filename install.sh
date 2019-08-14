@@ -12,6 +12,10 @@ docker-compose -f openrouteservice/docker/docker-compose.yml up -d
 # Start OpenPoiService
 docker-compose -f openpoiservice/docker-compose.yml up -d 
 
+# Import data
+docker exec -it naonedia_gunicorn_flask_1 /ops_venv/bin/python manage.py create-db
+docker exec -it naonedia_gunicorn_flask_1 /ops_venv/bin/python manage.py import-data
+
 # Start api-model
 docker-compose -f api-model/docker-compose.yml up -d 
 
