@@ -1,0 +1,12 @@
+version: '3'
+
+services:
+  tensorflow_serving:
+    image: tensorflow/serving:latest
+    ports:
+      - "7777:8501"
+    restart: on-failure
+    volumes: 
+      - ./models/main:/models/naonedia/1/
+    environment:
+      - MODEL_NAME=naonedia

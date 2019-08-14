@@ -9,7 +9,7 @@ services:
       - ./ops_settings_docker.yml:/deploy/app/openpoiservice/server/ops_settings.yml
       - ./categories_docker.yml:/deploy/app/openpoiservice/server/categories/categories.yml
     ports:
-      - "8888:5000"
+      - "22222:5000"
 
   openpoi_db:
     image: kartoza/postgis:11.0-2.5
