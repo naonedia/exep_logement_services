@@ -1,0 +1,4 @@
+.vscode
+api-model/data/models
+openrouteservice/docker/elevation_cache
+openrouteservice/docker/logs
