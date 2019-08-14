@@ -4,7 +4,7 @@ services:
   api_model_flask:
     build: .
     ports:
-      - "80:6000"
+      - "10000:6000"
     restart: on-failure
     volumes: 
      - ./data/newdata.csv:/data/newdata.csv

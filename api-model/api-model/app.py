@@ -79,7 +79,6 @@ def create_app():
     class Estimate(Resource):
         def post(self):
             json_data = request.get_json(force=True)
-            app.logger.info(json_data)
 
             json_check, err = checkJSONEstimate(json_data)
             if json_check:
@@ -125,7 +124,6 @@ def create_app():
     class Participate(Resource):
         def post(self):
             json_data = request.get_json(force=True)
-            app.logger.info(json_data)
             
             json_check, err = checkJSONParticipate(json_data)
             if json_check:
