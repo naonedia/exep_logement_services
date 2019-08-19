@@ -24,16 +24,20 @@
     "textAnalyzer": "libpostal",
     "services": {
       "pip": {
-        "url": "http://pip:4200"
+        "url": "http://pip:4200",
+        "timeout": 5000
       },
       "libpostal": {
-        "url": "http://libpostal:4400"
+        "url": "http://libpostal:4400",
+        "timeout": 5000
       },
       "placeholder": {
-        "url": "http://placeholder:4100"
+        "url": "http://placeholder:4100",
+        "timeout": 5000
       },
       "interpolation": {
-        "url": "http://interpolation:4300"
+        "url": "http://interpolation:4300",
+        "timeout": 5000
       }
     },
     "defaultParameters": {

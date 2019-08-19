@@ -22,6 +22,12 @@ services:
     restart: always
     environment: [ "PORT=4000" ]
     ports: [ "4000:4000" ]
+    healthcheck:
+      test: ["CMD","curl","localhost:9200/_cat/health","|","grep","green"]
+      interval: 1m30s
+      timeout: 10s
+      retries: 3
+      start_period: 10s
     volumes:
       - "./pelias.json:/code/pelias.json"
   placeholder:
