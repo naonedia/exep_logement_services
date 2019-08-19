@@ -112,7 +112,7 @@ def create_app():
                     with graph.as_default():                  
                         res = KERAS_MODEL.predict(np.array(data)[0:1])
 
-                    return {"price": str(res[0][0])}
+                    return {"type": "estimate","price": str(res[0][0])}
                 else:
 
                     # Error whilst retrieving town name and postal code
@@ -153,9 +153,11 @@ def create_app():
                     
                     appendNewData(data)
                     
-                    # No return
-                    return '', 200
-                    
+                    # Return estimation
+                    with graph.as_default():                  
+                        res = KERAS_MODEL.predict(np.array(data)[0:1])
+
+                    return {"type": "participate","price": str(res[0][0])}
                 else:
                     # Error whilst retrieving town name and postal code
                     return 'Internal Server Error', 500
