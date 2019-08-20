@@ -9,7 +9,7 @@ services:
     volumes: 
      - ./data/newdata.csv:/data/newdata.csv
     healthcheck:
-      test: "curl localhost:6000/healthcheck | grep ok"
+      test: "curl localhost:6000/api/healthcheck | grep OK"
       interval: 1m30s
       timeout: 10s
       retries: 3
