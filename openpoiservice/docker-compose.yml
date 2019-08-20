@@ -10,6 +10,12 @@ services:
       - ./categories_docker.yml:/deploy/app/openpoiservice/server/categories/categories.yml
     ports:
       - "22222:5000"
+    healthcheck:
+      test: "curl localhost:5000/pois -X POST -H 'content-type:application/json' -d '{\"request\": \"list\"}' | grep 843"
+      interval: 1m30s
+      timeout: 10s
+      retries: 3
+      start_period: 10s
 
   openpoi_db:
     image: kartoza/postgis:11.0-2.5

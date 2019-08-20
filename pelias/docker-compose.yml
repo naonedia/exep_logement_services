@@ -23,7 +23,7 @@ services:
     environment: [ "PORT=4000" ]
     ports: [ "4000:4000" ]
     healthcheck:
-      test: ["CMD","curl","localhost:9200/_cat/health","|","grep","green"]
+      test: "curl localhost:9200/_cat/health | grep green"
       interval: 1m30s
       timeout: 10s
       retries: 3
