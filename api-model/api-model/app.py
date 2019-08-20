@@ -164,12 +164,16 @@ def create_app():
             
             # Missing params in post request
             return err, 415
-
+    
+    class Healthcheck(Resource):
+        def get(self):
+            return 'OK', 200
 
 
 
     api.add_resource(Estimate, '/api/estimate')
     api.add_resource(Participate, '/api/participate')
+    api.add_resource(Healthcheck, '/api/healthcheck')
 
     return app
 

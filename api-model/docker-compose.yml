@@ -8,4 +8,9 @@ services:
     restart: on-failure
     volumes: 
      - ./data/newdata.csv:/data/newdata.csv
-    
+    healthcheck:
+      test: "curl localhost:6000/healthcheck | grep ok"
+      interval: 1m30s
+      timeout: 10s
+      retries: 3
+      start_period: 10s
