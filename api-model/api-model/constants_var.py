@@ -5,14 +5,10 @@ from os import path
 pd.options.mode.chained_assignment = None
 
 """ POI_CLIENT= openrouteservice.Client(base_url='http://gunicorn_flask:5000')
-ORS_CLIENT = openrouteservice.Client(base_url='http://ors-app:8080/ors')
-
-TENSORFLOW_API = 'http://tensorflow_serving:8501' """
+ORS_CLIENT = openrouteservice.Client(base_url='http://ors-app:8080/ors')"""
 
 POI_CLIENT= openrouteservice.Client(base_url='http://localhost:22222')
 ORS_CLIENT = openrouteservice.Client(base_url='http://localhost:9999/ors')
-
-TENSORFLOW_API = 'http://localhost:7777'
 
 ECONOMY_DATA = pd.read_csv('data/finance.csv')
 ECONOMY_DATA['annee'] = ECONOMY_DATA['annee'].astype(str)
