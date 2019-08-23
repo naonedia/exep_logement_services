@@ -1,9 +1,8 @@
 import openrouteservice
 import pandas as pd
+from os import path
 
 pd.options.mode.chained_assignment = None
-
-NEW_DATA_FILE = 'data/newdata.csv'
 
 """ POI_CLIENT= openrouteservice.Client(base_url='http://gunicorn_flask:5000')
 ORS_CLIENT = openrouteservice.Client(base_url='http://ors-app:8080/ors')
@@ -31,3 +30,9 @@ POSTAL_CODE = [44000,44300,44100,44400,44800,44470,44120,44230,44200,44220,44700
 44830,44640,44880,44840,44115,44620,44610,44860,44710]
 
 COLUMNS_ORDER = pd.read_csv('data/models/modelv1.COLUMNS_ORDER.csv', header=0)
+
+NEW_DATA_FILENAME = 'data/newdata.csv'
+if not path.exists(NEW_DATA_FILENAME):
+    pd.read_csv('data/models/modelv1.COLUMNS_ORDER.csv', header=0, nrows=0).to_csv(NEW_DATA_FILENAME,index=False)
+
+NEW_DATA_FILE = pd.read_csv(NEW_DATA_FILENAME, header=0)
