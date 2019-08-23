@@ -17,7 +17,7 @@ from geojson_utils import retrieveNameAndPostalCode, encodeCommune, encodePostal
 from embed_data import embedData
 from io_utils import appendNewData
 from economy_data import addEco
-from constants_var import COLUMNS_ORDER
+from constants_var import COLUMNS_ORDER, MODEL_FILE
 
 global KERAS_MODEL
 global graph
@@ -182,7 +182,7 @@ if __name__ == '__main__':
 
     app = create_app()
 
-    KERAS_MODEL = load_model('data/models/modelv1.h5')
+    KERAS_MODEL = load_model(MODEL_FILE)
     graph = tf.get_default_graph()
 
     limiter = Limiter(
