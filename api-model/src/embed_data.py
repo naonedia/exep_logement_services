@@ -1,4 +1,4 @@
-from constants_var import ORS_CLIENT, POI_CLIENT
+from src.constants_var import ORS_CLIENT, POI_CLIENT
 
 def buildIsochrone(timeOrDistance, profile, longitude, latitude):
 # Request of isochrones with 15 minute footwalk.

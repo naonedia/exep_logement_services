@@ -13,11 +13,11 @@ import tensorflow as tf
 from keras.models import load_model
 
 
-from geojson_utils import retrieveNameAndPostalCode, encodeCommune, encodePostalCode, encodeType
-from embed_data import embedData
-from io_utils import appendNewData
-from economy_data import addEco
-from constants_var import COLUMNS_ORDER, MODEL_FILE
+from src.geojson_utils import retrieveNameAndPostalCode, encodeCommune, encodePostalCode, encodeType
+from src.embed_data import embedData
+from src.io_utils import appendNewData
+from src.economy_data import addEco
+from src.constants_var import COLUMNS_ORDER, MODEL_FILE
 
 global KERAS_MODEL
 global graph
@@ -73,6 +73,7 @@ def checkJSONParticipate(data):
         return False, error
 
 def create_app():
+
     app = Flask(__name__)
     api = Api(app)
 
@@ -175,13 +176,6 @@ def create_app():
     api.add_resource(Participate, '/api/participate')
     api.add_resource(Healthcheck, '/api/healthcheck')
 
-    return app
-
-
-if __name__ == '__main__':
-
-    app = create_app()
-
     KERAS_MODEL = load_model(MODEL_FILE)
     graph = tf.get_default_graph()
 
@@ -196,4 +190,11 @@ if __name__ == '__main__':
     handler = logging.StreamHandler(sys.stdout)
     handler.setFormatter(logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s'))
 
+    return app
+
+app = create_app()
+
+if __name__ == '__main__':
+
     app.run(debug=True,use_reloader=False,host='0.0.0.0',port=6000)
+    

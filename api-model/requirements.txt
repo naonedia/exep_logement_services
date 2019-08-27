@@ -9,3 +9,4 @@ pandas==0.25.0
 shapely
 sklearn
 tensorflow==1.14.0
+uwsgi

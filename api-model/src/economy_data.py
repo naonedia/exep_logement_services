@@ -1,7 +1,8 @@
-from constants_var import AVAILABLE_TRIMESTER, ECONOMY_DATA
 from datetime import date
 import pandas as pd
 import numpy as np
+
+from src.constants_var import AVAILABLE_TRIMESTER, ECONOMY_DATA
 
 def monthToTrimester(month):
     if month <= 3:

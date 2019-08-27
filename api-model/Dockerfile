@@ -1,12 +1,28 @@
 FROM python:3.7
 
-COPY . /app
+RUN apt-get update
+RUN apt-get install -y --no-install-recommends libatlas-base-dev gfortran nginx supervisor
+
+COPY ./requirements.txt /app/requirements.txt
+
+RUN pip3 install --upgrade pip
+RUN pip3 install -r /app/requirements.txt
+
+RUN useradd --no-create-home nginx
+
+RUN rm /etc/nginx/sites-enabled/default
+RUN rm -r /root/.cache
+
+COPY conf/nginx.conf /etc/nginx/
+COPY conf/flask-nginx.conf /etc/nginx/conf.d/
+COPY conf/uwsgi.ini /etc/uwsgi/
+COPY conf/supervisord.conf /etc/supervisor/
+
+COPY ./src /app/src
+COPY ./data /app/data
+RUN mkdir -p /app/data/newdata
+RUN head -1 /app/data/models/model.COLUMNS_ORDER.csv > /app/data/newdata/data.csv
 
 WORKDIR /app
 
-RUN pip install --upgrade pip
-RUN pip install -r requirements.txt
-
-ENTRYPOINT ["python"]
-
-CMD ["./api-model/app.py"]
+CMD ["/usr/bin/supervisord"]

@@ -3,13 +3,14 @@ version: '3.4'
 services:
   api_model_flask:
     build: .
+    image: api_model_flask
     ports:
-      - "10000:6000"
+      - "10000:80"
     restart: on-failure
     volumes: 
-     - ./data/newdata.csv:/data/newdata.csv
+     - ./data/newdata/:/data/newdata/
     healthcheck:
-      test: "curl localhost:6000/api/healthcheck | grep OK"
+      test: "curl localhost/api/healthcheck | grep OK"
       interval: 1m30s
       timeout: 10s
       retries: 3

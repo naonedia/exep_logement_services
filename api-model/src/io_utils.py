@@ -1,6 +1,6 @@
-from constants_var import NEW_DATA_FILE, NEW_DATA_FILENAME
-
 import csv
+
+from src.constants_var import NEW_DATA_FILE, NEW_DATA_FILENAME
 
 index = 0
 
