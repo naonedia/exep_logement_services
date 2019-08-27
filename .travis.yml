@@ -4,4 +4,4 @@ services:
   - docker
 
 before_install:
-  - ./api-model/build.sh
+  - ./build.sh
