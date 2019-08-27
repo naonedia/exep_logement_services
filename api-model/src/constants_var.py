@@ -1,14 +1,16 @@
 import openrouteservice
 import pandas as pd
-from os import path
+import os
 
 pd.options.mode.chained_assignment = None
 
-""" POI_CLIENT= openrouteservice.Client(base_url='http://gunicorn_flask:5000')
-ORS_CLIENT = openrouteservice.Client(base_url='http://ors-app:8080/ors')"""
-
 POI_CLIENT= openrouteservice.Client(base_url='http://localhost:22222')
 ORS_CLIENT = openrouteservice.Client(base_url='http://localhost:9999/ors')
+
+if os.environ['ENV_TYPE'] == 'prod':
+    print("Starting API as in PRODUCTION ENVIRONMENT")
+    POI_CLIENT= openrouteservice.Client(base_url='http://gunicorn_flask:5000')
+    ORS_CLIENT = openrouteservice.Client(base_url='http://ors-app:8080/ors')
 
 ECONOMY_DATA = pd.read_csv('/app/data/finance.csv')
 ECONOMY_DATA['annee'] = ECONOMY_DATA['annee'].astype(str)
