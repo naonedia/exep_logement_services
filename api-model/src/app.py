@@ -12,12 +12,11 @@ import keras
 import tensorflow as tf
 from keras.models import load_model
 
-
 from src.geojson_utils import retrieveNameAndPostalCode, encodeCommune, encodePostalCode, encodeType
 from src.embed_data import embedData
-from src.io_utils import appendNewData
+from src.io_utils import appendNewData, backup
 from src.economy_data import addEco
-from src.constants_var import COLUMNS_ORDER, MODEL_FILE
+from src.constants_var import COLUMNS_ORDER, MODEL_FILENAME
 
 global KERAS_MODEL
 global graph
@@ -176,7 +175,7 @@ def create_app():
     api.add_resource(Participate, '/api/participate')
     api.add_resource(Healthcheck, '/api/healthcheck')
 
-    KERAS_MODEL = load_model(MODEL_FILE)
+    KERAS_MODEL = load_model(MODEL_FILENAME)
     graph = tf.get_default_graph()
 
     limiter = Limiter(
@@ -189,6 +188,8 @@ def create_app():
 
     handler = logging.StreamHandler(sys.stdout)
     handler.setFormatter(logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s'))
+
+    backup()
 
     return app
 

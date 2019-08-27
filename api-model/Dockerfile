@@ -20,8 +20,6 @@ COPY conf/supervisord.conf /etc/supervisor/
 
 COPY ./src /app/src
 COPY ./data /app/data
-RUN mkdir -p /app/data/newdata
-RUN head -1 /app/data/models/model.COLUMNS_ORDER.csv > /app/data/newdata/data.csv
 
 WORKDIR /app
 

@@ -1,16 +1,18 @@
 import csv
+import os
+from os import path
+from datetime import date
 
-from src.constants_var import NEW_DATA_FILE, NEW_DATA_FILENAME
-
-index = 0
+from src.constants_var import NEW_DATA, NEW_DATA_FILENAME, COLUMNS_ORDER_FILENAME, BACKUP_NEW_DATA_FILENAME_BEGIN, BACKUP_NEW_DATA_FILENAME_END
 
 def appendNewData(data):
+    NEW_DATA = NEW_DATA.append(data)
+    NEW_DATA.to_csv(NEW_DATA_FILENAME, index=False)    
 
-    global index
+def backup():
+    if path.exists(NEW_DATA_FILENAME):
+        os.rename(NEW_DATA_FILENAME, BACKUP_NEW_DATA_FILENAME_BEGIN + date.today().strftime("%d-%m-%Y")+ '-' + BACKUP_NEW_DATA_FILENAME_END)
 
-    NEW_DATA_FILE = NEW_DATA_FILE.append(data)
-    index += 1
-
-    if(index == 10):
-        NEW_DATA_FILE.to_csv(NEW_DATA_FILENAME, index=False)
-        index = 0
+    with open(COLUMNS_ORDER_FILENAME, 'r') as f:
+            with open(NEW_DATA_FILENAME, 'w') as g:
+                g.write(f.readline())

@@ -1,10 +1,10 @@
 import json
 from shapely.geometry import shape, Point
 
-from src.constants_var import COMMUNES_NANTES_METROPOLE, POSTAL_CODE
+from src.constants_var import COMMUNES_NANTES_METROPOLE, POSTAL_CODE, GEOJSON_NANTES_FILENAME
 
 # load GeoJSON file containing sectors
-with open('/app/data/communes-nantes-metropole.geojson') as f:
+with open(GEOJSON_NANTES_FILENAME) as f:
     nantes_metropolis_geojson = json.load(f)
 
 

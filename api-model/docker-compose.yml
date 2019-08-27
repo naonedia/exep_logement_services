@@ -8,10 +8,13 @@ services:
       - "10000:80"
     restart: on-failure
     volumes: 
-     - ./data/newdata/:/data/newdata/
+     - ./newdata/:/app/data/newdata/
+     - ./models/:/app/data/models/
     healthcheck:
       test: "curl localhost/api/healthcheck | grep OK"
       interval: 1m30s
       timeout: 10s
       retries: 3
       start_period: 10s
+    environment:
+      - ENV_TYPE=dev

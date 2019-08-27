@@ -2,6 +2,8 @@ import openrouteservice
 import pandas as pd
 import os
 
+from os import path
+
 pd.options.mode.chained_assignment = None
 
 POI_CLIENT= openrouteservice.Client(base_url='http://localhost:22222')
@@ -27,9 +29,19 @@ COMMUNES_NANTES_METROPOLE = ['NANTES','REZE','ST-HERBLAIN','VERTOU','ST-SEBASTIE
 POSTAL_CODE = [44000,44300,44100,44400,44800,44470,44120,44230,44200,44220,44700,44240,44340,44980,
 44830,44640,44880,44840,44115,44620,44610,44860,44710]
 
-COLUMNS_ORDER = pd.read_csv('/app/data/models/model.COLUMNS_ORDER.csv', header=0)
-MODEL_FILE = '/app/data/models/model.h5'
-
+COLUMNS_ORDER_FILENAME = '/app/data/models/model.COLUMNS_ORDER.csv'
 NEW_DATA_FILENAME = '/app/data/newdata/data.csv'
+BACKUP_NEW_DATA_FILENAME_BEGIN = '/app/data/newdata/'
+BACKUP_NEW_DATA_FILENAME_END = 'data.csv'
 
-NEW_DATA_FILE = pd.read_csv(NEW_DATA_FILENAME, header=0)
+MODEL_FILENAME = '/app/data/models/model.h5'
+GEOJSON_NANTES_FILENAME = '/app/data/communes-nantes-metropole.geojson'
+
+COLUMNS_ORDER = pd.read_csv(COLUMNS_ORDER_FILENAME, header=0)
+
+if not path.exists(NEW_DATA_FILENAME):
+    with open(COLUMNS_ORDER_FILENAME, 'r') as f:
+            with open(NEW_DATA_FILENAME, 'w') as g:
+                g.write(f.readline())
+
+NEW_DATA = pd.read_csv(NEW_DATA_FILENAME, header=0)
