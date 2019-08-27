@@ -3,7 +3,7 @@ FROM python:3.7
 RUN apt-get update
 RUN apt-get install -y --no-install-recommends libatlas-base-dev gfortran nginx supervisor
 
-COPY ./requirements.txt /app/requirements.txt
+COPY conf/requirements.txt /app/requirements.txt
 
 RUN pip3 install --upgrade pip
 RUN pip3 install -r /app/requirements.txt
