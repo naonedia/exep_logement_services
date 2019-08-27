@@ -4,11 +4,6 @@ services:
         image: naonedia_openrouteservice
         ports:
             - 9999:8080
-        build:
-            context: ../
-            args:
-                APP_CONFIG: ./docker/conf/app.config.sample
-                OSM_FILE: ./docker/data/pays-de-la-loire-latest.osm.pbf
         volumes:
             - ./graphs:/ors-core/data/graphs
             - ./elevation_cache:/ors-core/data/elevation_cache
