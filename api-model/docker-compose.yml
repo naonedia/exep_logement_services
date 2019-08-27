@@ -3,7 +3,7 @@ version: '3.4'
 services:
   api_model_flask:
     build: .
-    image: api_model_flask
+    image: naonedia/api_model_flask:$TAG
     ports:
       - "10000:80"
     restart: on-failure
