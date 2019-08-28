@@ -2,7 +2,7 @@ version: '3.4'
 
 services:
   gunicorn_flask:
-    image: naonedia_gunicorn_flask
+    image: naonedia/expe_logement_openpoiservice:$TAG
     build: .
     volumes:
       - ./osm:/deploy/app/osm

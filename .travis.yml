@@ -5,3 +5,9 @@ services:
 
 before_install:
   - ./build.sh
+
+deploy:
+  provider: script
+  script: docker login -u $DOCKER_USER -p $DOCKER_PASS && ./push.sh
+  on:
+    branch: master

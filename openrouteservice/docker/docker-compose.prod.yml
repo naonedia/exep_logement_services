@@ -1,7 +1,7 @@
 version: '3.4'
 services:
     ors-app:
-        image: naonedia_openrouteservice
+        image: naonedia/expe_logement_openrouteservice
         ports:
             - 9999:8080
         volumes:

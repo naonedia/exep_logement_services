@@ -2,12 +2,12 @@
 
 # Build api-model image
 cd api-model
-./build.sh
+./push.sh
 
 # Build OpenPOIService
 cd ../openpoiservice
-./build.sh
+./push.sh
 
 # Build OpenRouteService
 cd ../openrouteservice/docker
-./build.sh
+./push.sh
