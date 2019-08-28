@@ -25,7 +25,6 @@ def encode(data, col, max_val):
     return data
 
 def addEco(data):
-    data['mois'] = date.today().month
     data['annee'] = 2018
     data = encode(data, 'mois', 12)
 
