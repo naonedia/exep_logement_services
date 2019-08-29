@@ -16,12 +16,12 @@ def monthToTrimester(month):
 
 def getLastNYears(year, month, n ):
     index = AVAILABLE_TRIMESTER.index(str(year) + '-'+ monthToTrimester(month))
-    
+
     return AVAILABLE_TRIMESTER[index-20: index]
 
 def encode(data, col, max_val):
-    data[col + '_sin'] = np.sin(2 * np.pi * data[col]/max_val)
-    data[col + '_cos'] = np.cos(2 * np.pi * data[col]/max_val)
+    data[col + '_sin'] = np.sin(2 * np.pi * date.today().month/max_val)
+    data[col + '_cos'] = np.cos(2 * np.pi * date.today().month/max_val)
     return data
 
 def addEco(data):
@@ -29,7 +29,7 @@ def addEco(data):
     data = encode(data, 'mois', 12)
 
     YEAR_LOOKBACK = 5
-    toRetrieve = getLastNYears(data.loc[0,'annee'], data.loc[0,'mois'],YEAR_LOOKBACK)
+    toRetrieve = getLastNYears(data.loc[0,'annee'], date.today().month,YEAR_LOOKBACK)
     k = YEAR_LOOKBACK - 1
     j = 0
     for val in toRetrieve:

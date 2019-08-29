@@ -21,6 +21,9 @@ COPY conf/supervisord.conf /etc/supervisor/
 COPY ./src /app/src
 COPY ./data /app/data
 
+RUN chown -R nginx /app
+RUN chmod -R 666 /app/data
+
 WORKDIR /app
 
 CMD ["/usr/bin/supervisord"]
