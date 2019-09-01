@@ -19,10 +19,12 @@ COPY conf/uwsgi.ini /etc/uwsgi/
 COPY conf/supervisord.conf /etc/supervisor/
 
 COPY ./src /app/src
+
+RUN mkdir -p /app/data
 COPY ./data /app/data
 
 RUN chown -R nginx /app
-RUN chmod -R 666 /app/data
+RUN chmod -R 777 /app/data
 
 WORKDIR /app
 
