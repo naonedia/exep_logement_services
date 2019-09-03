@@ -2,7 +2,7 @@ version: '3.4'
 
 services:
   gunicorn_flask:
-    image: naonedia/expe_logement_openpoiservice
+    image: naonedia/expe_logement_openpoiservice:1.0.0
     volumes:
       - ./osm:/deploy/app/osm
       - ./ops_settings_docker.yml:/deploy/app/openpoiservice/server/ops_settings.yml
