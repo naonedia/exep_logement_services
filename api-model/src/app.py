@@ -8,9 +8,8 @@ import sys
 import logging
 import pandas as pd
 import numpy as np
-import keras
 import tensorflow as tf
-from keras.models import load_model
+import keras as k
 
 from src.geojson_utils import retrieveNameAndPostalCode, encodeCommune, encodePostalCode, encodeType
 from src.embed_data import embedData
@@ -20,6 +19,7 @@ from src.constants_var import COLUMNS_ORDER, MODEL_FILENAME
 
 global KERAS_MODEL
 global graph
+global session
 
 def normalize(data):
     mu = COLUMNS_ORDER.loc[0].to_numpy()
@@ -55,7 +55,7 @@ def checkJSONEstimate(data):
         return False, "No longitude in given data"
     if 'latitude' not in data:
         return False, "No latitude in given data"
-    
+
     return True, ""
 
 
@@ -67,8 +67,8 @@ def checkJSONParticipate(data):
             return False, "Missing price in given data"
         if 'year' not in data:
             return False, "Missing year in given data"
-        return True, ""    
-    else:    
+        return True, ""
+    else:
         return False, error
 
 def create_app():
@@ -78,6 +78,7 @@ def create_app():
 
     class Estimate(Resource):
         def post(self):
+
             json_data = request.get_json(force=True)
 
             json_check, err = checkJSONEstimate(json_data)
@@ -91,7 +92,7 @@ def create_app():
                 if town_name and postal_code:
                     data.loc[0,'nom_commune'] = town_name
                     data.loc[0,'code_postal'] = postal_code
-                    
+
                     encodeCommune(data)
                     encodePostalCode(data)
                     encodeType(data)
@@ -104,39 +105,44 @@ def create_app():
                     # Re-ordering columns according to the trained model
                     data = data[COLUMNS_ORDER.columns]
 
-                    
-                    # Normalize data 
+
+                    # Normalize data
                     data = normalize(data.to_numpy())
-                    
+
                     # Return estimation
-                    with graph.as_default():                  
+                    with session.graph.as_default():
+                        k.backend.set_session(session)
                         res = KERAS_MODEL.predict(np.array(data)[0:1])
+
+                    print('response returned ' + str(res))
+                    app.logger.info('response returned ' + str(res))
 
                     return {"type": "estimate","price": str(res[0][0])}
                 else:
 
                     # Error whilst retrieving town name and postal code
                     return 'Internal Server Error', 500
-            
+
             # Missing params in post request
             return err, 415
 
     class Participate(Resource):
         def post(self):
+
             json_data = request.get_json(force=True)
-            
+
             json_check, err = checkJSONParticipate(json_data)
             if json_check:
                 data = translate_features_name(json_data)
                 data = pd.io.json.json_normalize(json_data)
                 data = embedData(data)
                 data = addEco(data)
-                
+
                 town_name, postal_code = retrieveNameAndPostalCode(data['longitude'],data['latitude'])
                 if town_name and postal_code:
                     data.loc[0,'nom_commune'] = town_name
                     data.loc[0,'code_postal'] = postal_code
-                    
+
                     encodeCommune(data)
                     encodePostalCode(data)
                     encodeType(data)
@@ -148,23 +154,24 @@ def create_app():
                     # Re-ordering columns according to the trained model
                     data = data[COLUMNS_ORDER.columns]
 
-                    # Normalize data 
+                    # Normalize data
                     data = normalize(data.to_numpy())
-                    
+
                     appendNewData(data)
-                    
+
                     # Return estimation
-                    with graph.as_default():                  
+                    with session.graph.as_default():
+                        k.backend.set_session(session)
                         res = KERAS_MODEL.predict(np.array(data)[0:1])
 
                     return {"type": "participate","price": str(res[0][0])}
                 else:
                     # Error whilst retrieving town name and postal code
                     return 'Internal Server Error', 500
-            
+
             # Missing params in post request
             return err, 415
-    
+
     class Healthcheck(Resource):
         def get(self):
             return 'OK', 200
@@ -175,8 +182,10 @@ def create_app():
     api.add_resource(Participate, '/api/participate')
     api.add_resource(Healthcheck, '/api/healthcheck')
 
-    KERAS_MODEL = load_model(MODEL_FILENAME)
-    graph = tf.get_default_graph()
+    session = tf.Session(graph=tf.Graph())
+    with session.graph.as_default():
+        k.backend.set_session(session)
+        KERAS_MODEL = k.models.load_model(MODEL_FILENAME)
 
     limiter = Limiter(
         app,

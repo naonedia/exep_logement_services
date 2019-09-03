@@ -28,4 +28,6 @@ RUN chmod -R 777 /app/data
 
 WORKDIR /app
 
+EXPOSE 5000
+
 CMD ["/usr/bin/supervisord"]
