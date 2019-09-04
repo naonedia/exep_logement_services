@@ -154,10 +154,10 @@ def create_app():
                     # Re-ordering columns according to the trained model
                     data = data[COLUMNS_ORDER.columns]
 
+                    appendNewData(data)
+
                     # Normalize data
                     data = normalize(data.to_numpy())
-
-                    appendNewData(data)
 
                     # Return estimation
                     with session.graph.as_default():

@@ -6,6 +6,8 @@ from datetime import date
 from src.constants_var import NEW_DATA, NEW_DATA_FILENAME, COLUMNS_ORDER_FILENAME, BACKUP_NEW_DATA_FILENAME_BEGIN, BACKUP_NEW_DATA_FILENAME_END
 
 def appendNewData(data):
+    global NEW_DATA
+    
     NEW_DATA = NEW_DATA.append(data)
     NEW_DATA.to_csv(NEW_DATA_FILENAME, index=False)    
 
