@@ -1,5 +1,15 @@
 # exep_logement_services
+https://img.shields.io/travis/naonedia/expe_logement_services/master  
 Hosts different services used for creating models. We use docker technology.
+
+## OpenRouteService
+[![](https://images.microbadger.com/badges/version/naonedia/expe_logement_openrouteservice.svg)](https://microbadger.com/images/naonedia/expe_logement_openrouteservice)
+
+## OpenPOIService
+[![](https://images.microbadger.com/badges/version/naonedia/expe_logement_openpoiservice.svg)](https://microbadger.com/images/naonedia/expe_logement_openpoiservice)
+
+## API_model
+[![](https://images.microbadger.com/badges/version/naonedia/expe_logement_api_model.svg)](https://microbadger.com/images/naonedia/expe_logement_api_model)  
 
 ## Dataset
  We retrieved the dataset [here](https://download.geofabrik.de/europe/france/pays-de-la-loire.html)
