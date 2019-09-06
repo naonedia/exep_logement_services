@@ -1,14 +1,18 @@
 # exep_logement_services
-https://img.shields.io/travis/naonedia/expe_logement_services/master  
+![Travis (.org) branch](https://img.shields.io/travis/naonedia/expe_logement_services/master)  
 Hosts different services used for creating models. We use docker technology.
 
 ## OpenRouteService
+[![](https://images.microbadger.com/badges/image/naonedia/expe_logement_openrouteservice.svg)](https://microbadger.com/images/naonedia/expe_logement_openrouteservice)
 [![](https://images.microbadger.com/badges/version/naonedia/expe_logement_openrouteservice.svg)](https://microbadger.com/images/naonedia/expe_logement_openrouteservice)
 
+
 ## OpenPOIService
+[![](https://images.microbadger.com/badges/image/naonedia/expe_logement_openpoiservice.svg)](https://microbadger.com/images/naonedia/expe_logement_openpoiservice)
 [![](https://images.microbadger.com/badges/version/naonedia/expe_logement_openpoiservice.svg)](https://microbadger.com/images/naonedia/expe_logement_openpoiservice)
 
 ## API_model
+[![](https://images.microbadger.com/badges/image/naonedia/expe_logement_api_model.svg)](https://microbadger.com/images/naonedia/expe_logement_api_model)
 [![](https://images.microbadger.com/badges/version/naonedia/expe_logement_api_model.svg)](https://microbadger.com/images/naonedia/expe_logement_api_model)  
 
 ## Dataset
