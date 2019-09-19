@@ -55,9 +55,18 @@ def checkJSONEstimate(data):
         return False, "No longitude in given data"
     if 'latitude' not in data:
         return False, "No latitude in given data"
+    if data['groundSurface'] <= 0
+        return False, "Ground surface can't be less than 1 square meter"
+    if data['groundSurfaceCarrez'] <= 0
+        return False, "Ground surface can't be less than 1 square meter"
+    if data['groundSurfaceTotal'] <= 0
+        return False, "Ground surface can't be less than 1 square meter"
+    if data['roomNumber'] <= 0
+        return False, "Room number can't be 0"
+    if data['type'] != 'Appartement' and data['type'] != 'Maison':
+        return False, "Type must be 'Appartement' or 'Maison'"
 
     return True, ""
-
 
 def checkJSONParticipate(data):
     res, error = checkJSONEstimate(data)
@@ -65,8 +74,15 @@ def checkJSONParticipate(data):
     if(res):
         if 'price' not in data:
             return False, "Missing price in given data"
+        if 'month' not in data:
+            return False, "Missing month in given data"
         if 'year' not in data:
             return False, "Missing year in given data"
+        if data['year'] >= 2005 and data['year'] < 2019
+            return False, "Yaer must be between 2005 and 2018 included"
+        if data['month'] >= 1 and data['month'] <= 12
+            return False, "Month must be between 1 and 12 included"
+        
         return True, ""
     else:
         return False, error
@@ -121,7 +137,7 @@ def create_app():
                 else:
 
                     # Error whilst retrieving town name and postal code
-                    return 'Internal Server Error', 500
+                    return 'Longitude and/or latitude are out of range', 500
 
             # Missing params in post request
             return err, 415
@@ -167,7 +183,7 @@ def create_app():
                     return {"type": "participate","price": str(res[0][0])}
                 else:
                     # Error whilst retrieving town name and postal code
-                    return 'Internal Server Error', 500
+                    return 'Longitude and/or latitude are out of range', 500
 
             # Missing params in post request
             return err, 415
@@ -187,11 +203,11 @@ def create_app():
         k.backend.set_session(session)
         KERAS_MODEL = k.models.load_model(MODEL_FILENAME)
 
-    limiter = Limiter(
+"""     limiter = Limiter(
         app,
         key_func=get_remote_address,
         default_limits=["200 per day", "50 per hour"]
-    )
+    ) """
 
     cors = CORS(app, resources={r"*": {"origins": "*"}})
 
