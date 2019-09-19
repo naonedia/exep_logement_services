@@ -63,8 +63,8 @@ def checkJSONEstimate(data):
         return False, "Ground surface can't be less than 1 square meter"
     if data['roomNumber'] <= 0:
         return False, "Room number can't be 0"
-    if data['type'] != 'Appartement' and data['type'] != 'Maison':
-        return False, "Type must be 'Appartement' or 'Maison'"
+    if data['type'] != 'house' and data['type'] != 'flat':
+        return False, "Type must be 'house' or 'flat'"
 
     return True, ""
 
