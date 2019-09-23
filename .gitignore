@@ -2,3 +2,5 @@
 api-model/data/models
 openrouteservice/docker/elevation_cache
 openrouteservice/docker/logs
+model/data/models
+model/data/
