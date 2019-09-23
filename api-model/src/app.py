@@ -78,8 +78,8 @@ def checkJSONParticipate(data):
             return False, "Missing month in given data"
         if 'year' not in data:
             return False, "Missing year in given data"
-        if data['year'] >= 2005 and data['year'] < 2019:
-            return False, "Yaer must be between 2005 and 2018 included"
+        if int(data['year']) >= 2005 and int(data['year']) < 2019:
+            return False, "Year must be between 2005 and 2018 included"
         if int(data['month']) >= 1 and int(data['month']) <= 12:
             return False, "Month must be between 1 and 12 included"
         
