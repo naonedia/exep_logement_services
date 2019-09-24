@@ -2,7 +2,7 @@ version: '3.4'
 
 services:
   api_model_flask:
-    image: naonedia/expe_logement_api_model:1.0.2d
+    image: naonedia/expe_logement_api_model:1.0.2e
     ports:
       - "10000:80"
     volumes:
