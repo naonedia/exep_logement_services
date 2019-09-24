@@ -1,3 +1,3 @@
 #!/usr/bin/env bash
 
-export TAG="1.0.2c"
+export TAG="1.0.2d"
