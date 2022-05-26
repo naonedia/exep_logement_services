@@ -8,5 +8,5 @@ openrouteservice
 pandas==0.25.0
 shapely
 sklearn
-tensorflow==1.14.0
+tensorflow==2.7.2
 uwsgi
